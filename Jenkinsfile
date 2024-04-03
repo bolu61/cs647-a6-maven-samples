@@ -1,21 +1,21 @@
 pipeline {
   agent any
   tools { 
-      maven 'DHT_MVN' 
-      jdk 'DHT_SENSE' 
+      maven 'Default'
+      jdk 'temurin8' 
   }
   stages {
-    stage('check out') {
+    stage("verify") {
       steps {
-        git(url: 'https://github.com/dhetong/maven-samples-A6.git', branch: 'master')
+        script {
+          try {
+            sh 'mvn clean test'
+          } catch (e) {
+            sh 'git bisect start HEAD HEAD~5'
+            sh 'git bisect run mvn clean test'
+          }
+        }
       }
     }
-
-    stage('run') {
-      steps {
-        sh 'mvn verify'
-      }
-    }
-
   }
 }
