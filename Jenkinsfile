@@ -13,6 +13,7 @@ pipeline {
           } catch (e) {
             sh 'git bisect start HEAD HEAD~5'
             sh 'git bisect run mvn clean test'
+            throw e
           }
         }
       }
